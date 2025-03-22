@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  type              String?
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  token_type        String?
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  scope             String?
+  id_token          String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String?  @map("user_id")
+  sessionToken String   @unique @map("session_token") @db.Text
+  accessToken  String?  @map("access_token") @db.Text
+  expires      DateTime
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("sessions")
+}
+
+model VerificationRequest {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
+  @@map("verification_requests")
+}
+
+model User {
+  id                     String    @id @default(cuid())
+  name                   String?
+  email                  String?   @unique
+  emailVerified          DateTime?
+  phone                  String?
+  image                  String?
+  location               String?
+  hasCompletedOnboarding Boolean   @default(false)
+  bio                    String?   @db.Text
+  profileImage           String?
+  password               String?
+  interests              String[]
+  completedSessions      Int       @default(0)
+  totalHours             Float     @default(0)
+  mentorCount            Int       @default(0)
+  joinDate               DateTime  @default(now())
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  // Mentor specific fields
+  isMentor    Boolean  @default(false)
+  expertise   String[] @default([])
+  rate        Float?
+  rating      Float?   @default(0)
+  reviewCount Int      @default(0)
+
+  // Relations
+  accounts        Account[]
+  sessions        Session[]
+  education       Education[]
+  experience      Experience[]
+  availability    Availability[]
+  mentorBookings  Booking[]      @relation("MentorBookings")
+  studentBookings Booking[]      @relation("StudentBookings")
+
+  receivedReviews Review[]      @relation("MentorReviews")
+  givenReviews    Review[]      @relation("UserReviews")
+  Transaction     Transaction[]
+
+  mentorTransactions Transaction[] @relation("MentorTransactions")
+
+  @@map("users")
+}
+
+model Education {
+  id          String   @id @default(cuid())
+  institution String
+  degree      String
+  year        String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("education")
+}
+
+model Experience {
+  id        String   @id @default(cuid())
+  company   String
+  position  String
+  duration  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("experience")
+}
+
+model Availability {
+  id        String   @id @default(cuid())
+  day       String
+  slots     String[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("availability")
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  mentorId  String
+  studentId String
+  topic     String
+  time      String?
+  date      DateTime
+  duration  Int
+  status    String // pending, confirmed, completed, cancelled
+  orderId   String? // Add this field to link with transactions
+  notes     String?  @db.Text
+
+  // Zoom meeting fields
+  zoomMeetingId String?
+  zoomJoinUrl   String? @db.Text
+  zoomStartUrl  String? @db.Text
+  zoomPassword  String?
+
+  // Relations
+  mentor    User     @relation("MentorBookings", fields: [mentorId], references: [id])
+  student   User     @relation("StudentBookings", fields: [studentId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bookings")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  mentor   User   @relation("MentorReviews", fields: [mentorId], references: [id])
+  mentorId String
+  user     User   @relation("UserReviews", fields: [userId], references: [id])
+  userId   String
+
+  @@map("reviews")
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  mentorId  String   @map("mentor_id")
+  orderId   String   @unique @map("order_id") // ID Order dari Midtrans
+  status    String   @default("pending") // pending, success, failed
+  price     Int // Harga transaksi dalam IDR
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mentor User @relation("MentorTransactions", fields: [mentorId], references: [id])
+
+  @@map("transactions")
+}
