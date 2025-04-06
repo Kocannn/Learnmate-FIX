@@ -117,50 +117,52 @@ export function ProfileSidebar() {
         </CardContent>
       </Card>
 
-      {userType === "mentee" && (
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-base">Statistik Pembelajaran</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mr-3">
-                  <Calendar className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Sesi Selesai</p>
-                </div>
-              </div>
-              <p className="font-bold">{userData.completedSessions}</p>
-            </div>
+      {/* statistik pembelajaran  */}
 
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mr-3">
-                  <Clock className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Total Jam</p>
-                </div>
-              </div>
-              <p className="font-bold">{userData.totalHours}</p>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mr-3">
-                  <User className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Mentor</p>
-                </div>
-              </div>
-              <p className="font-bold">{userData.mentors}</p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* {userType === "mentee" && ( */}
+      {/*   <Card className="mt-6"> */}
+      {/*     <CardHeader> */}
+      {/*       <CardTitle className="text-base">Statistik Pembelajaran</CardTitle> */}
+      {/*     </CardHeader> */}
+      {/*     <CardContent className="space-y-4"> */}
+      {/*       <div className="flex justify-between items-center"> */}
+      {/*         <div className="flex items-center"> */}
+      {/*           <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mr-3"> */}
+      {/*             <Calendar className="h-4 w-4 text-indigo-600 dark:text-indigo-400" /> */}
+      {/*           </div> */}
+      {/*           <div> */}
+      {/*             <p className="text-sm font-medium">Sesi Selesai</p> */}
+      {/*           </div> */}
+      {/*         </div> */}
+      {/*         <p className="font-bold">{userData.completedSessions}</p> */}
+      {/*       </div> */}
+      {/**/}
+      {/*       <div className="flex justify-between items-center"> */}
+      {/*         <div className="flex items-center"> */}
+      {/*           <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mr-3"> */}
+      {/*             <Clock className="h-4 w-4 text-indigo-600 dark:text-indigo-400" /> */}
+      {/*           </div> */}
+      {/*           <div> */}
+      {/*             <p className="text-sm font-medium">Total Jam</p> */}
+      {/*           </div> */}
+      {/*         </div> */}
+      {/*         <p className="font-bold">{userData.totalHours}</p> */}
+      {/*       </div> */}
+      {/**/}
+      {/*       <div className="flex justify-between items-center"> */}
+      {/*         <div className="flex items-center"> */}
+      {/*           <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mr-3"> */}
+      {/*             <User className="h-4 w-4 text-indigo-600 dark:text-indigo-400" /> */}
+      {/*           </div> */}
+      {/*           <div> */}
+      {/*             <p className="text-sm font-medium">Mentor</p> */}
+      {/*           </div> */}
+      {/*         </div> */}
+      {/*         <p className="font-bold">{userData.mentors}</p> */}
+      {/*       </div> */}
+      {/*     </CardContent> */}
+      {/*   </Card> */}
+      {/* )} */}
 
       {userType === "mentor" && (
         <Card className="mt-6">
