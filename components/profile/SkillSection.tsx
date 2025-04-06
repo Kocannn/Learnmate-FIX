@@ -13,17 +13,21 @@ import { useState } from "react";
 
 interface SkillsSectionProps {
   userData: any;
+  setUserData: (value: any) => void;
   userType: "mentor" | "mentee";
   editMode: boolean;
   handleAddInterests: (interests: string[]) => void;
+  handleDeleteInterests: (interests: string) => void;
 }
 
 export default function SkillsSection({
   userData,
+  handleDeleteInterests,
   userType,
   editMode,
   handleAddInterests,
 }: SkillsSectionProps) {
+
   const [skills, setSkills] = useState<string[]>([]);
   return (
     <Card>
@@ -52,8 +56,7 @@ export default function SkillsSection({
                   <button
                     className="ml-2 text-muted-foreground hover:text-foreground"
                     onClick={() => {
-                      // Handle remove skill logic would go here
-                      console.log("Remove skill:", skill);
+                      handleDeleteInterests(skill);
                     }}
                   >
                     <X className="h-3 w-3" />

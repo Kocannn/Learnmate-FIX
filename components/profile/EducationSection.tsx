@@ -1,4 +1,4 @@
-import { Plus, GraduationCap, PencilIcon, Trash2Icon } from "lucide-react";
+import { Plus, GraduationCap, Trash2Icon } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -13,12 +13,14 @@ interface EducationSectionProps {
   editMode: boolean;
   formData: any;
   setShowAddEducation: (show: boolean) => void;
+  handleDeleteEducation: (educationData: any, index: number) => Promise<void>;
 }
 
 export default function EducationSection({
   userData,
   editMode,
   setShowAddEducation,
+  handleDeleteEducation,
 }: EducationSectionProps) {
   return (
     <Card>
@@ -59,11 +61,11 @@ export default function EducationSection({
                   </div>
                   {editMode && (
                     <div className="flex space-x-2">
-                      <Button variant="ghost" size="icon">
-                        <PencilIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2Icon className="h-4 w-4" />
+                      <Button variant="ghost" size="icon" onClick={() => {
+                        handleDeleteEducation(edu, index);
+
+                      }}>
+                        <Trash2Icon className="h-4 w-4 text-red-500" />
                       </Button>
                     </div>
                   )}
