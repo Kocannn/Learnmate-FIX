@@ -40,6 +40,8 @@ interface ProfileContextType {
   handleSaveProfile: () => Promise<void>;
   handleAddEducation: (educationData: Education) => void;
   handleAddInterests: (interests: string[]) => void;
+  handleDeleteEducation: (educationData: Education, index: number) => Promise<void>
+  handleDeleteInterests: (interests: string) => void;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -189,6 +191,53 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const handleDeleteInterests = async (interests: string) => {
+    if (!formData) return;
+    // Remove the deleted interests from the form data state
+    setFormData((prevFormData: any) => ({
+      ...prevFormData,
+      interests: prevFormData.interests.filter(
+        (interest: string) => !interests.includes(interest)
+      ),
+    }));
+    setUserUi((prevUiData: any) => ({
+      ...prevUiData,
+      interests: prevUiData.interests.filter(
+        (interest: string) => !interests.includes(interest)
+      ),
+    }));
+  }
+
+  const handleDeleteEducation = async (educationData: Education, index: number) => {
+    if (!formData || !userUi?.education) return
+
+    const updatedEducation = [...userUi.education]
+    updatedEducation.splice(index, 1)
+
+    setUserUi((prev) => {
+      const updatedState = {
+        ...prev,
+        education: updatedEducation,
+      };
+      return updatedState;
+    });
+
+    try {
+      const response = await fetch('/api/v1/profile/education/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(educationData)
+      })
+      const data = await response.json()
+      if (!data.ok) throw new Error('Failed to delete education')
+    } catch (error) {
+      console.error("Error deleting education:", error);
+    }
+
+  }
+
   const handleSaveProfile = async () => {
     if (!formData) return;
 
@@ -237,6 +286,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         showAddExperience,
         setEditMode,
         setFormData,
+        handleDeleteInterests,
+        handleDeleteEducation,
         handleAddInterests,
         handleAddEducation,
         setShowAddEducation,
