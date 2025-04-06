@@ -19,7 +19,10 @@ export default function ProfileTab() {
     userType,
     editMode,
     formData,
+    setUserUi,
     userUi,
+    handleDeleteEducation,
+    handleDeleteInterests,
     handleAddInterests,
     setFormData,
     setShowAddEducation,
@@ -94,6 +97,7 @@ export default function ProfileTab() {
       </Card>
 
       <EducationSection
+        handleDeleteEducation={handleDeleteEducation}
         formData={formData}
         userData={userUi}
         editMode={editMode}
@@ -109,10 +113,12 @@ export default function ProfileTab() {
       )}
 
       <SkillsSection
+        setUserData={setUserUi}
         userData={userUi}
         userType={userType}
         editMode={editMode}
         handleAddInterests={handleAddInterests}
+        handleDeleteInterests={handleDeleteInterests}
       />
     </div>
   );
