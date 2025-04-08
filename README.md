@@ -128,14 +128,182 @@ LearnMate adalah platform mentoring online yang menghubungkan mentor dengan ment
 
 ## API Endpoints
 
+### Authentication API
+
+#### `POST /api/v1/signup`
+
+Registers a new user in the system.
+
+**Request**:
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Response**:
+```json
+{
+  "id": "clg2u3jk50000v9qt7s8j3l5c",
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+### User & Profile API
+
+#### `POST /api/v1/user/complete-onboarding`
+
+Marks the current user's onboarding process as completed.
+
+**Response**:
+```json
+{
+  "success": true
+}
+```
+
+#### `PUT /api/v1/profile`
+
+Updates the logged-in user's profile information.
+
+**Request**:
+```json
+{
+  "name": "John Doe",
+  "bio": "Software developer with 5 years experience",
+  "location": "Jakarta, Indonesia",
+  "isMentor": true,
+  "expertise": ["JavaScript", "React", "Node.js"],
+  "rate": 350000,
+  "education": [
+    {
+      "id": "edu1", 
+      "institution": "Universitas Indonesia",
+      "degree": "S1 Ilmu Komputer",
+      "year": "2020"
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp1",
+      "company": "Tech Company",
+      "position": "Software Engineer",
+      "duration": "2020-Present",
+      "description": "Full stack development"
+    }
+  ],
+  "availability": [
+    {
+      "id": "avail1",
+      "day": "Monday",
+      "slots": ["09:00", "10:00", "11:00"]
+    }
+  ]
+}
+```
+
+**Response**:
+```json
+{
+  "id": "clg2u3jk50000v9qt7s8j3l5c",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "bio": "Software developer with 5 years experience",
+  "location": "Jakarta, Indonesia",
+  "isMentor": true
+}
+```
+
+### Mentors API
+
+#### `GET /api/v1/mentors`
+
+Returns a list of all available mentors.
+
+**Response**:
+```json
+[
+  {
+    "id": "clg2u3jk50000v9qt7s8j3l5a",
+    "name": "Budi Santoso",
+    "interests": ["Programming", "Teaching"],
+    "rating": 4.8,
+    "rate": 350000,
+    "profileImage": "/placeholder.svg?height=200&width=200",
+    "bio": "Experienced software engineer and mentor",
+    "reviewCount": 24
+  }
+]
+```
+
+#### `GET /api/v1/mentors/:id`
+
+Returns detailed information about a specific mentor.
+
+**Parameters**:
+- `includeReviews` (optional): Set to "true" to include mentor reviews
+
+**Response**:
+```json
+{
+  "id": "clg2u3jk50000v9qt7s8j3l5a",
+  "name": "Budi Santoso",
+  "bio": "Experienced software engineer and mentor",
+  "profileImage": "/placeholder.svg?height=200&width=200",
+  "expertise": ["JavaScript", "React", "Node.js"],
+  "rate": 350000,
+  "rating": 4.8,
+  "reviewCount": 24,
+  "education": [
+    {
+      "id": "edu1",
+      "institution": "Universitas Indonesia",
+      "degree": "S1 Ilmu Komputer",
+      "year": "2018"
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp1",
+      "company": "Google",
+      "position": "Software Engineer",
+      "duration": "2018-Present",
+      "description": "Full stack development"
+    }
+  ],
+  "availability": [
+    {
+      "id": "avl1",
+      "day": "Monday",
+      "slots": ["09:00", "10:00", "11:00"]
+    }
+  ],
+  "receivedReviews": [
+    {
+      "id": "rev1",
+      "rating": 5.0,
+      "comment": "Sangat membantu dan menjelaskan dengan baik",
+      "createdAt": "2023-05-20T07:00:00Z",
+      "user": {
+        "id": "usr1",
+        "name": "Mentee Name",
+        "profileImage": "/placeholder.svg?height=100&width=100"
+      }
+    }
+  ]
+}
+```
+
 ### Booking API
 
 #### `GET /api/v1/bookings`
 
-Mengambil semua booking milik user yang sedang login.
+Retrieves all bookings for the currently logged-in user, both as mentor and mentee.
 
 **Response**:
-
 ```json
 {
   "bookings": [
@@ -145,16 +313,23 @@ Mengambil semua booking milik user yang sedang login.
       "studentId": "clg2u3jk50000v9qt7s8j3l5c",
       "topic": "JavaScript Fundamentals",
       "date": "2023-06-15T13:00:00Z",
+      "time": "13:00",
       "duration": 60,
       "status": "confirmed",
       "zoomJoinUrl": "https://zoom.us/j/123456789",
       "zoomStartUrl": "https://zoom.us/s/123456789",
       "zoomPassword": "123456",
+      "reviewed": false,
+      "student": {
+        "id": "clg2u3jk50000v9qt7s8j3l5c",
+        "name": "Student Name"
+      },
       "mentor": {
         "id": "clg2u3jk50000v9qt7s8j3l5a",
         "name": "Budi Santoso",
         "profileImage": "/placeholder.svg?height=200&width=200",
-        "expertise": "JavaScript, React, Node.js"
+        "expertise": ["JavaScript", "React", "Node.js"],
+        "rate": 350000
       }
     }
   ]
@@ -163,10 +338,9 @@ Mengambil semua booking milik user yang sedang login.
 
 #### `GET /api/v1/bookings/:id`
 
-Mengambil detail booking tertentu.
+Retrieves details for a specific booking.
 
 **Response**:
-
 ```json
 {
   "id": "clg2u3jk50000v9qt7s8j3l5b",
@@ -179,16 +353,21 @@ Mengambil detail booking tertentu.
   "mentor": {
     "id": "clg2u3jk50000v9qt7s8j3l5a",
     "name": "Budi Santoso",
-    "profileImage": "/placeholder.svg?height=200&width=200",
-    "expertise": "JavaScript, React, Node.js",
+    "profileImage": "/placeholder.svg?height=200&width=200", 
+    "expertise": ["JavaScript", "React", "Node.js"],
     "rate": 350000
+  },
+  "student": {
+    "id": "clg2u3jk50000v9qt7s8j3l5c",
+    "name": "Student Name",
+    "email": "student@example.com"
   }
 }
 ```
 
 #### `POST /api/v1/bookings/create`
 
-Membuat booking baru dengan mentor.
+Creates a new booking with a mentor.
 
 **Request**:
 ```json
@@ -198,8 +377,7 @@ Membuat booking baru dengan mentor.
   "time": "13:00",
   "duration": 60,
   "topic": "JavaScript Fundamentals",
-  "notes": "Pertanyaan tentang async/await",
-  "orderId": "20230615130012ABCD"
+  "notes": "Pertanyaan tentang async/await"
 }
 ```
 
@@ -218,10 +396,9 @@ Membuat booking baru dengan mentor.
 
 #### `PUT /api/v1/bookings/:id/confirm`
 
-Mengkonfirmasi booking tertentu.
+Confirms a specific booking.
 
 **Response**:
-
 ```json
 {
   "success": true,
@@ -232,48 +409,32 @@ Mengkonfirmasi booking tertentu.
 }
 ```
 
-### Reviews API
+### Meeting API
 
-#### `POST /api/v1/reviews/create`
+#### `GET /api/v1/meetings/:id`
 
-Membuat ulasan baru untuk mentor.
-
-**Request**:
-
-```json
-{
-  "mentorId": "clg2u3jk50000v9qt7s8j3l5a",
-  "rating": 4.5,
-  "comment": "Mentor sangat membantu dalam menjelaskan konsep dasar JavaScript"
-}
-```
+Retrieves details of a specific meeting.
 
 **Response**:
-
 ```json
 {
-  "id": "clg2u3jk50001v9qt7s8j3l5d",
-  "mentorId": "clg2u3jk50000v9qt7s8j3l5a",
-  "userId": "clg2u3jk50000v9qt7s8j3l5c",
-  "rating": 4.5,
-  "comment": "Mentor sangat membantu dalam menjelaskan konsep dasar JavaScript",
-  "createdAt": "2023-06-16T13:00:00Z"
+  "id": "clg2u3jk50000v9qt7s8j3l5b",
+  "topic": "JavaScript Fundamentals",
+  "zoomMeetingId": "123456789",
+  "zoomJoinUrl": "https://zoom.us/j/123456789",
+  "mentor": { "name": "Budi Santoso" },
+  "student": { "name": "Student Name" }
 }
 ```
-
-### Meeting API
 
 #### `POST /api/v1/meetings/create`
 
-Membuat Zoom meeting untuk booking.
+Creates a Zoom meeting for a booking.
 
 **Request**:
-
 ```json
 {
   "bookingId": "clg2u3jk50000v9qt7s8j3l5b",
-  "mentorId": "clg2u3jk50000v9qt7s8j3l5a",
-  "studentId": "clg2u3jk50000v9qt7s8j3l5c",
   "topic": "Sesi Mentoring dengan Budi Santoso",
   "startTime": "2023-06-15T13:00:00Z",
   "duration": 60
@@ -281,15 +442,16 @@ Membuat Zoom meeting untuk booking.
 ```
 
 **Response**:
-
 ```json
 {
   "success": true,
-  "data": {
-    "id": "123456789",
-    "join_url": "https://zoom.us/j/123456789",
-    "start_url": "https://zoom.us/s/123456789",
-    "password": "123456"
+  "meetingId": "123456789",
+  "joinUrl": "https://zoom.us/j/123456789",
+  "booking": {
+    "id": "clg2u3jk50000v9qt7s8j3l5b",
+    "zoomMeetingId": "123456789",
+    "zoomJoinUrl": "https://zoom.us/j/123456789",
+    "zoomStartUrl": "https://zoom.us/s/123456789"
   }
 }
 ```
@@ -298,7 +460,7 @@ Membuat Zoom meeting untuk booking.
 
 #### `POST /api/v1/payment/token`
 
-Membuat token pembayaran untuk integrasi dengan payment gateway.
+Creates a payment token for integration with the payment gateway.
 
 **Request**:
 ```json
@@ -311,10 +473,8 @@ Membuat token pembayaran untuk integrasi dengan payment gateway.
 **Response**:
 ```json
 {
-  "token": "payment-token-string",
-  "redirectUrl": "https://payment-gateway.com/checkout"
+  "token": "payment-token-string"
 }
-```
 
 ## Database Schema
 
