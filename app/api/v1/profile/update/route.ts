@@ -14,7 +14,7 @@ export async function PUT(request: Request) {
   }
 
   const data = await request.json();
-  console.log(data);
+  console.log("idi data: ", data);
 
   try {
     const user = await prisma.user.update({
@@ -53,7 +53,7 @@ export async function PUT(request: Request) {
     return NextResponse.json(user);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to update profile" },
+      { error: `Failed to update profile ${error}` },
       { status: 500 },
     );
   }

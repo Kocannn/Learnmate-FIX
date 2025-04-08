@@ -475,7 +475,7 @@ Creates a payment token for integration with the payment gateway.
 {
   "token": "payment-token-string"
 }
-
+```
 ## Database Schema
 
 ### User
