@@ -5,38 +5,82 @@ import { Label } from "@/components/ui/label";
 import {
   Calendar,
   Camera,
-  Clock,
   Edit,
   Mail,
   MapPin,
   Phone,
   Save,
   Star,
-  User,
 } from "lucide-react";
 import { useProfile } from "@/context/ProfileContext";
+import React from "react";
+import { supabase } from "@/lib/supabase-client";
 
 export function ProfileSidebar() {
   const { user, userData, userType, editMode, setEditMode, handleSaveProfile } =
     useProfile();
+  const [isDisable, setIsDisable] = React.useState(false);
+
+
+  const handleFileChange = async (e: any) => {
+    try {
+
+      const file = e.target.files[0];
+      if (!file) return;
+
+      setIsDisable(true);
+
+      const { data, error } = await supabase.storage
+        .from('learnmate')
+        .upload(`images/${file.name}`, file)
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const res = await fetch(`/api/v1/profile/update-profile-picture`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data,
+        }),
+      });
+      if (res.status == 200) {
+        setIsDisable(false);
+      }
+
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+
+  }
+
+
 
   return (
     <div className="md:col-span-1">
+      <input type="file" id="file-upload" className="hidden" accept="image/*" onChange={handleFileChange} disabled={isDisable} />
       <Card>
         <CardContent className="p-6">
           <div className="flex flex-col items-center">
             <div className="relative">
               <img
-                src={userData.profileImage || "/placeholder.svg"}
-                alt={userData.name}
+                src={user?.profileImage}
+                alt={user?.name}
                 className="rounded-full h-32 w-32 mb-4"
               />
+
+
               <Button
                 size="icon"
                 className="absolute bottom-4 right-0 rounded-full h-8 w-8"
                 variant="secondary"
               >
-                <Camera className="h-4 w-4" />
+                <label htmlFor="file-upload" >
+                  <Camera className="h-4 w-4" />
+                </label>
               </Button>
             </div>
             <h2 className="text-xl font-bold">{user?.name}</h2>

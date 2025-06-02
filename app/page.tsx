@@ -45,10 +45,12 @@ export default function LandingPage() {
                 baru.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
-                  Mulai Sekarang
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <a href="/dashboard">
+                  <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+                    Mulai Sekarang
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </a>
                 <Button size="lg" variant="outline">
                   Pelajari Lebih Lanjut
                 </Button>
@@ -56,7 +58,7 @@ export default function LandingPage() {
             </div>
             <div className="flex-1">
               <img
-                src="/placeholder.svg?height=400&width=500"
+                src="https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg"
                 alt="Mentoring Platform"
                 className="rounded-lg shadow-xl"
               />

@@ -118,7 +118,7 @@ function AppSidebar({ pathname }: { pathname: string }) {
                   asChild
                   isActive={pathname === "/dashboard/settings"}
                 >
-                  <a href="/dashboard/settings">
+                  <a href="/dashboard/profile">
                     <Settings />
                     <span>Pengaturan</span>
                   </a>

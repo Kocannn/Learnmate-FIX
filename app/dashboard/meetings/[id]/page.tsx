@@ -75,9 +75,8 @@ export default function MeetingRoom() {
       <MeetingHeader title={meeting.topic} />
 
       <Tabs defaultValue="meeting" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6">
+        <TabsList className="grid w-full grid-cols-1 mb-6">
           <TabsTrigger value="meeting">Sesi Meeting</TabsTrigger>
-          <TabsTrigger value="info">Informasi Sesi</TabsTrigger>
         </TabsList>
 
         <TabsContent value="meeting">
@@ -87,9 +86,6 @@ export default function MeetingRoom() {
           />
         </TabsContent>
 
-        <TabsContent value="info">
-          {/* Info tab content goes here */}
-        </TabsContent>
       </Tabs>
     </div>
   );

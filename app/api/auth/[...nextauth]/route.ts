@@ -70,14 +70,14 @@ export const authOptions: NextAuthOptions = {
             rate: true,
             rating: true,
             reviewCount: true,
-            education: true, // Tambahkan field education
-            experience: true, // Tambahkan field experience
+            education: true,
+            experience: true,
           },
         });
 
         if (updatedUser) {
-          session.user = updatedUser; // Perbarui session dengan data terbaru
-          token.user = updatedUser; // Perbarui token dengan data terbaru
+          session.user = updatedUser;
+          token.user = updatedUser;
         }
       }
       return session;
@@ -85,7 +85,6 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user }) {
       if (user) {
-        // When user signs in, fetch complete user profile from database
         const userProfile = await prisma.user.findUnique({
           where: { id: user.id },
           select: {
@@ -108,11 +107,9 @@ export const authOptions: NextAuthOptions = {
             rate: true,
             rating: true,
             reviewCount: true,
-            // Exclude password and other sensitive fields
           },
         });
 
-        // Store complete user profile in token
         token.user = userProfile;
       }
       return token;
